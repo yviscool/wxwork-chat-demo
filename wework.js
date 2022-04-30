@@ -3,8 +3,6 @@ const addon = require('wework-chat-node');
 const path = require('path');
 const os = require('os');
 const L = require('lodash');
-const NodeCache = require('node-cache');
-
 
 const dayjs = require('dayjs');
 const isLeapYear = require('dayjs/plugin/isLeapYear');
@@ -85,15 +83,7 @@ const ACTION = {
 
 
 // 常用信息缓存, 成员信息, 用户信息, 群组信息
-class MessageCache {
-
-  constructor() {
-    this.store = new NodeCache({
-      stdTTL: 4 * 60 * 60, // 一个小时过期
-      checkperiod: 100, //  每隔十秒检查是否过期
-    });
-  }
-
+class MessageCache extends Map {
 
   async init() {
     const userList = await this.initUser();
@@ -116,7 +106,7 @@ class MessageCache {
       userlist = userListObj.map(user => user.get({ plain: true })).map(({ userid, name, avatar }) => ({ userid, name, avatar }));
     }
 
-    userlist.forEach(({ userid, name }) => this.store.set(userid, name));
+    userlist.forEach(({ userid, name }) => this.set(userid, name));
 
     return userlist;
   }
@@ -137,16 +127,8 @@ class MessageCache {
       externalUserList = userListObj.map(user => user.get({ plain: true })).map(({ userid, name, avatar }) => ({ userid, name, avatar }));
     }
 
-    externalUserList.forEach(({ userid, name }) => this.store.set(userid, name));
+    externalUserList.forEach(({ userid, name }) => this.set(userid, name));
 
-  }
-
-  get(key) {
-    return this.store.get(key);
-  }
-
-  set(key, value) {
-    this.store.set(key, value);
   }
 
 }
