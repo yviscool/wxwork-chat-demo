@@ -99,9 +99,9 @@ class MessageCache extends Map {
     });
 
     if (userListObj.length == 0) {
-      const userListData = await internal.user.getList(1);
-      userlist = userListData.userlist;
-      await EnterpriseWxUser.bulkCreate(userlist);
+//       const userListData = await internal.user.getList(1);
+//       userlist = userListData.userlist;
+//       await EnterpriseWxUser.bulkCreate(userlist);
     } else {
       userlist = userListObj.map(user => user.get({ plain: true })).map(({ userid, name, avatar }) => ({ userid, name, avatar }));
     }
@@ -209,11 +209,11 @@ async function callData(msg) {
         if (cache.get(fromId)) {
           from = cache.get(fromId);
         } else {
-          const user = await internal.user.get(fromId);
-          await EnterpriseWxUser.create({
-            ...user,
-          });
-          from = user.name;
+//           const user = await internal.user.get(fromId);
+//           await EnterpriseWxUser.create({
+//             ...user,
+//           });
+//           from = user.name;
         }
         tolistType = 0;
       // 外部群聊
